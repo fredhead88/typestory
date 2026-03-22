@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Screen from "@/components/Screen";
+import { PlayerConfig } from "@/lib/gameState";
 
 type GenderOption = "female" | "male";
 
@@ -54,7 +55,11 @@ const QUESTIONS: Question[] = [
 const UNSELECTED = "bg-[#cff4ff] text-[#1a1a2e] font-bold";
 const SELECTED = "bg-black text-[#00e5ff] border-2 border-[#00e5ff] font-bold";
 
-export default function QuestionScreen() {
+type Props = {
+  onStart: (config: PlayerConfig) => void;
+};
+
+export default function QuestionScreen({ onStart }: Props) {
   const [name, setName] = useState("Hero");
   const [gender, setGender] = useState<GenderOption | null>(null);
   const [bookLength, setBookLength] = useState<number | null>(null);
@@ -142,7 +147,17 @@ export default function QuestionScreen() {
 
         {/* Start button */}
         {allAnswered && (
-          <button className="w-full rounded-lg bg-[#00e5ff] text-[#1a1a2e] font-bold py-4 text-lg transition-colors hover:bg-[#00c4db]">
+          <button
+            onClick={() =>
+              onStart({
+                name: name.trim(),
+                gender: gender!,
+                bookLength: bookLength!,
+                answers,
+              })
+            }
+            className="w-full rounded-lg bg-[#00e5ff] text-[#1a1a2e] font-bold py-4 text-lg transition-colors hover:bg-[#00c4db]"
+          >
             Start the Story
           </button>
         )}
